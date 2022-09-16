@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS", //
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "allowJs": false,
+    "strictNullChecks": false,
+    "noImplicitAny": true,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "outDir": "build",
+    "baseUrl": "./src/api",
+    "paths": {},
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/**/node_modules", "node_modules"]
+}
