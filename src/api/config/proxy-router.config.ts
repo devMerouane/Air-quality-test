@@ -1,13 +1,17 @@
 import { Router } from 'express';
 
 import { MainRouter } from '../core/routes/v1/main.route';
+import { AirQualityRouter } from '../core/routes/v1/air-quality.route';
 
 class ProxyRouter {
   private static instance: ProxyRouter;
 
   private router: Router = Router();
 
-  private readonly routes = [{ path: '/', provider: MainRouter }];
+  private readonly routes = [
+    { path: '/', provider: MainRouter },
+    { path: '/air-quality', provider: AirQualityRouter },
+  ];
 
   private constructor() {}
 
