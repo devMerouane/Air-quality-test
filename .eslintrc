@@ -30,6 +30,7 @@
     "class-methods-use-this": "off",
     "no-use-before-define": "off",
     "func-names": "off",
+    "new-cap": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "_next", "ignoreRestSiblings": true }],
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-useless-constructor": ["off"],
