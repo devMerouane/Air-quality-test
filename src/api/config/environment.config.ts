@@ -2,6 +2,7 @@ import { config as dotenv } from 'dotenv';
 import { existsSync, mkdirSync } from 'fs';
 
 import { ENVIRONMENT_ENUM } from '../core/types/enums';
+import { EnvLogs } from '../core/types/types';
 
 export class Environment {
   private static instance: Environment;
@@ -17,10 +18,7 @@ export class Environment {
   private constructor() {}
 
   get keys(): string[] {
-    return [
-      'NODE_ENV',
-      'PORT',
-    ];
+    return ['NODE_ENV', 'PORT', 'LOGS_PATH', 'LOGS_TOKEN'];
   }
 
   get rules(): Record<string, any> {
@@ -47,6 +45,24 @@ export class Environment {
         }
 
         return parseInt(value, 10);
+      },
+      LOGS_PATH: (value: string): string => {
+        if (!value) {
+          this.errors.push(
+            'LOGS_PATH not found: please provide the path for logs'
+          );
+        }
+
+        return value;
+      },
+      LOGS_TOKEN: (value: string): string => {
+        if (!value) {
+          this.errors.push(
+            'LOGS_PATH not found: please provide the token for logs'
+          );
+        }
+
+        return value;
       },
     };
   }
@@ -97,6 +113,10 @@ export class Environment {
     this.cluster = {
       NODE_ENV: this.variables.NODE_ENV,
       PORT: this.variables.PORT,
+      LOGS: {
+        PATH: this.variables.LOGS_PATH,
+        TOKEN: this.variables.LOGS_TOKEN,
+      },
     };
 
     return this;
@@ -132,5 +152,6 @@ if (!environment.isValid()) environment.exit(environment.errors);
 
 const NODE_ENV = environment.cluster.NODE_ENV as string;
 const PORT = environment.cluster.PORT as number;
+const LOGS = environment.cluster.LOGS as EnvLogs;
 
-export { PORT, NODE_ENV,  };
+export { PORT, NODE_ENV, LOGS };
