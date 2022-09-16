@@ -1,5 +1,9 @@
 import express from 'express';
 
+import { Logger } from './logger.config';
+import { errorMiddleware } from '../core/middlewares';
+import { ProxyRouter } from './proxy-router.config';
+
 class ExpressConfiguration {
   private static instance: ExpressConfiguration;
 
@@ -26,6 +30,9 @@ class ExpressConfiguration {
   plug() {
     this.application.use(express.urlencoded({ extended: false }));
     this.application.use(express.json());
+    this.application.use('/api/v1', ProxyRouter.map());
+    this.application.use(Logger.writeStream());
+    this.application.use(errorMiddleware);
 
     return this;
   }
