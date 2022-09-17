@@ -58,3 +58,23 @@ export const airQualityService = new AirQualityService();
     });
   }
 
+  async getParisAirQualityTimeMostPolluted() {
+    const cachedData = Cache.getCache<Pick<AirQualityCreateDto, 'ts'>>('getParisAirQualityTimeMostPolluted');
+
+    if (cachedData) {
+      return cachedData;
+    }
+
+    const airQualityTime = await airQualityRepository.getTimeOfMostPollutedCountry({
+      city: 'Paris',
+      state: 'Ile-de-France',
+      country: 'France',
+    });
+
+    Cache.setCache('getParisAirQualityTimeMostPolluted', airQualityTime);
+
+    return airQualityTime;
+  }
+}
+
+export const airQualityService = new AirQualityService();
