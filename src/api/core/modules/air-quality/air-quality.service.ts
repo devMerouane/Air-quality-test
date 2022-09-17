@@ -34,22 +34,11 @@ class AirQualityService {
     return response.data.data.current.pollution;
   }
 
-  private async getParisAirQuality() {
-    let parisAirQuality = Cache.getCache<AirQualityReponse>('getParisAirQuality');
+  async createParisAirQuality() {
+    const parisLat = 48.856613;
+    const parisLon = 2.352222;
 
-    if (!parisAirQuality) {
-      const configuration: AxiosRequestConfig = {
-        params: {
-          key: AIR_QUALITY.KEY,
-          lat: '48.856613',
-          lon: '2.352222',
-        },
-      };
-
-      const response = await new BaseRequest().init(AIR_QUALITY.URL).get('/nearest_city', configuration);
-      parisAirQuality = { status: response.data.status, pollution: response.data.data.current.pollution };
-      Cache.setCache('getParisAirQuality', parisAirQuality);
-    }
+    const parisAirQuality = await this.getAirQualityByCoordinates({ lat: parisLat, lon: parisLon });
 
     if (parisAirQuality.status === 'success') {
       await airQualityRepository.create({
@@ -68,7 +57,7 @@ class AirQualityService {
   async parisAirQualityCron() {
     const scheduler = new Scheduler('* * * * *');
     scheduler.init(async () => {
-      await this.getParisAirQuality();
+      await this.createParisAirQuality();
     });
   }
 
