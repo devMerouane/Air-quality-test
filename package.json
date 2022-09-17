@@ -9,6 +9,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon -L",
+    "build":"tsc",
     "test": "jest"
   },
   "dependencies": {
