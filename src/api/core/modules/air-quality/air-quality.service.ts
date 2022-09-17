@@ -13,8 +13,8 @@ interface AirQualityReponse {
   pollution: AirQualityCreateDto;
 }
 class AirQualityService {
-  async getAirQualityByCoordinates(airQualityParamsDto: AirQualityQuery) {
-    const cachedData = Cache.getCache<AirQualityQuery>('getAirQualityByCoordinates');
+  async getAirQualityByCoordinates(airQualityParamsDto: AirQualityQuery): Promise<AirQualityReponse> {
+    const cachedData = Cache.getCache<AirQualityReponse>(`${airQualityParamsDto.lat}-${airQualityParamsDto.lon}`);
 
     if (cachedData) {
       return cachedData;
@@ -28,10 +28,13 @@ class AirQualityService {
       },
     };
 
-    const response = await new BaseRequest().init(AIR_QUALITY.URL).get('/nearest_city', configuration);
-    Cache.setCache('getAirQualityByCoordinates', response.data.data.current.pollution);
+    const response = await new BaseRequest(AIR_QUALITY.URL).get('/nearest_city', configuration);
+    Cache.setCache(`${airQualityParamsDto.lat}-${airQualityParamsDto.lon}`, {
+      status: response.data.status,
+      pollution: response.data.data.current.pollution,
+    });
 
-    return response.data.data.current.pollution;
+    return { status: response.data.status, pollution: response.data.data.current.pollution } as AirQualityReponse;
   }
 
   async createParisAirQuality() {

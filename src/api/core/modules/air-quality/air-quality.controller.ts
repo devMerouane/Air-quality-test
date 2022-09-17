@@ -14,8 +14,8 @@ class AirQualityController {
       });
 
       return res.status(200).send({
-        sucess: true,
-        data: response,
+        success: true,
+        data: response.pollution,
         message: 'polution return succefuly',
       });
     } catch (error) {
