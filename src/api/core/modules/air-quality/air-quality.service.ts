@@ -65,19 +65,23 @@ class AirQualityService {
   }
 
   async getParisAirQualityTimeMostPolluted() {
-    const cachedData = Cache.getCache<Pick<AirQualityCreateDto, 'ts'>>('getParisAirQualityTimeMostPolluted');
+    const city = 'Paris';
+    const state = 'Ile-de-France';
+    const country = 'France';
+
+    const cachedData = Cache.getCache<Pick<AirQualityCreateDto, 'ts'>>(`${city}-${state}-${country}`);
 
     if (cachedData) {
       return cachedData;
     }
 
     const airQualityTime = await airQualityRepository.getTimeOfMostPollutedCountry({
-      city: 'Paris',
-      state: 'Ile-de-France',
-      country: 'France',
+      city,
+      state,
+      country,
     });
 
-    Cache.setCache('getParisAirQualityTimeMostPolluted', airQualityTime);
+    Cache.setCache(`${city}-${state}-${country}`, airQualityTime);
 
     return airQualityTime;
   }
