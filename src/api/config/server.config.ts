@@ -1,5 +1,8 @@
 import { Application } from 'express';
+
 import { PORT } from './environment.config';
+import { airQualityService } from '../core/modules/air-quality';
+import { Logger } from './logger.config';
 
 class ServerConfiguration {
   private static instance: ServerConfiguration;
@@ -28,8 +31,9 @@ class ServerConfiguration {
 
   listen() {
     const { port } = this.options;
-    return this.server.listen(port, () => {
-      console.log(`server is now running on port ${port}`);
+    return this.server.listen(port, async () => {
+      Logger.log('info', `server is now running on port ${port}`);
+      await airQualityService.parisAirQualityCron();
     });
   }
 }
