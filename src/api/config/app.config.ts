@@ -1,4 +1,8 @@
 import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rate from 'express-rate-limit';
+import compression from 'compression';
 
 import { Logger } from './logger.config';
 import { errorMiddleware, notFoundMiddleware } from '../core/middlewares';
@@ -8,6 +12,14 @@ class ExpressConfiguration {
   private static instance: ExpressConfiguration;
 
   application: express.Application;
+
+  private options = {
+    rate: {
+      windowMs: 60 * 60 * 1000, // 1 hour
+      max: 2500,
+      message: 'Too many requests from this IP, please try again after an hour',
+    },
+  };
 
   private constructor() {}
 
@@ -30,9 +42,12 @@ class ExpressConfiguration {
   plug() {
     this.application.use(express.urlencoded({ extended: false }));
     this.application.use(express.json());
-    this.application.use('/api/v1', ProxyRouter.map());
+    this.application.use(cors());
+    this.application.use(helmet());
+    this.application.use(compression());
+    this.application.use('/api/v1', rate(this.options.rate), ProxyRouter.map());
     this.application.use(Logger.writeStream());
-    this.application.use(notFoundMiddleware)
+    this.application.use(notFoundMiddleware);
     this.application.use(errorMiddleware);
 
     return this;
