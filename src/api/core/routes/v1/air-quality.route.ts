@@ -10,6 +10,9 @@ export class AirQualityRouter extends Router {
   }
 
   define(): void {
-    this.router.route('/').get(getAirQaulityValidation, validateMiddleware, airQualityController.getAirQualityByCoordinates);
+    this.router
+      .route('/')
+      .get(getAirQaulityValidation, validateMiddleware, airQualityController.getAirQualityByCoordinates);
+    this.router.route('/paris/most-polluted/time').get(airQualityController.getParisAirQualityMostPolluted);
   }
 }
