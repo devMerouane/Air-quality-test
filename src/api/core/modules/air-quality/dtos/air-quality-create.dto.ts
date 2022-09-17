@@ -2,7 +2,7 @@ export interface AirQualityCreateDto {
   city: string,
   state: string,
   country: string,
-  ts: Date;
+  ts: string;
   aqius: number;
   mainus: string;
   aqicn: number;
