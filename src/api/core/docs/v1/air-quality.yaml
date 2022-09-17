@@ -1,0 +1,116 @@
+paths:
+  /air-quality:
+    get:
+      summary: Fetch the pollution of a given position
+      description: This endpoint fetch the pollution data of a city
+      tags:
+        - Air Quality
+      parameters:
+        - in: query
+          name: lat
+          schema:
+            type: float
+            minimum: -90
+            maximum: 90
+          description: the latitude of a position
+        - in: query
+          name: lon
+          schema:
+            type: float
+            minimum: -180
+            maximum: 180
+          description: the longetitude of a position
+      responses:
+        200:
+          description: Return the air quality for a position
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      ts:
+                        type: string
+                        format: date
+                      aqius:
+                        type: number
+                      mainus:
+                        type: string
+                      aqicn:
+                        type: number
+                      maincn:
+                        type: string
+                  message:
+                    type: string
+        400:
+          description: Return validation error
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        value:
+                          type: string
+                        msg:
+                          type: string
+                        param:
+                          type: string
+                        location:
+                          type: string
+        500:
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+  /air-quality/paris/most-polluted/time:
+    get:
+      summary: Get the time where paris has the hightest AQI
+      description: This endpoint return the time that paris has the hightest AQI
+      tags:
+        - Air Quality
+      responses:
+        200:
+          description: Return the time where paris has the hightest AQI
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      ts:
+                        type: string
+                        format: date
+                  message:
+                    type: string
+        500:
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
