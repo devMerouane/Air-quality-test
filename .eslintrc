@@ -31,10 +31,12 @@
     "no-use-before-define": "off",
     "func-names": "off",
     "new-cap": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "_next", "ignoreRestSiblings": true }],
+    "arrow-body-style": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "_*", "ignoreRestSiblings": true }],
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-useless-constructor": ["off"],
-    "@typescript-eslint/no-empty-function": ["error", {"allow": ["private-constructors", "constructors", "methods"]}],
+    "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-use-before-define": "error"
   },
   "settings": {
