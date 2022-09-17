@@ -2,7 +2,7 @@ import { config as dotenv } from 'dotenv';
 import { existsSync, mkdirSync } from 'fs';
 
 import { ENVIRONMENT_ENUM } from '../core/types/enums';
-import { EnvLogs, EnvAirQuality } from '../core/types/types';
+import { EnvLogs, EnvAirQuality, EnvMongoDB } from '../core/types/types';
 
 export class Environment {
   private static instance: Environment;
@@ -18,7 +18,16 @@ export class Environment {
   private constructor() {}
 
   get keys(): string[] {
-    return ['NODE_ENV', 'PORT', 'LOGS_PATH', 'LOGS_TOKEN', 'AIR_QUALITY_URL', 'AIR_QUALITY_PUBLIC_KEY'];
+    return [
+      'NODE_ENV',
+      'PORT',
+      'LOGS_PATH',
+      'LOGS_TOKEN',
+      'AIR_QUALITY_URL',
+      'AIR_QUALITY_PUBLIC_KEY',
+      'MONGODB_URL',
+      'CACHE_DURATION',
+    ];
   }
 
   get rules(): Record<string, any> {
@@ -68,6 +77,20 @@ export class Environment {
         }
 
         return value;
+      },
+      MONGODB_URL: (value: string): string => {
+        if (!value) {
+          this.errors.push('MONGODB_URL not found: please define the targeted database');
+        }
+
+        return value;
+      },
+      CACHE_DURATION: (value: string): number => {
+        if (!value) {
+          this.errors.push('CACHE_DURATION bad value: please provide the cache duration in seconds');
+        }
+
+        return parseInt(value, 10);
       },
     };
   }
@@ -124,6 +147,10 @@ export class Environment {
         URL: this.variables.AIR_QUALITY_URL,
         KEY: this.variables.AIR_QUALITY_PUBLIC_KEY,
       },
+      MONGODB: {
+        URL: this.variables.MONGODB_URL,
+      },
+      CACHE_DURATION: this.variables.CACHE_DURATION
     };
 
     return this;
@@ -157,5 +184,7 @@ const NODE_ENV = environment.cluster.NODE_ENV as string;
 const PORT = environment.cluster.PORT as number;
 const LOGS = environment.cluster.LOGS as EnvLogs;
 const AIR_QUALITY = environment.cluster.AIR_QUALITY as EnvAirQuality;
+const MONGODB = environment.cluster.MONGODB as EnvMongoDB;
+const CACHE_DURATION = environment.cluster.CACHE_DURATION as number;
 
-export { PORT, NODE_ENV, LOGS, AIR_QUALITY };
+export { PORT, NODE_ENV, LOGS, AIR_QUALITY, MONGODB, CACHE_DURATION };
