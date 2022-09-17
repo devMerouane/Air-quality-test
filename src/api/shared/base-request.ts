@@ -1,14 +1,19 @@
-import axios from 'axios';
-
-
+import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export class BaseRequest {
+  private axiosInstance: AxiosInstance;
 
-  constructor() {}
+  constructor(baseUrl: string) {
+    this.init(baseUrl);
+  }
 
   init(baseUrl: string) {
-    const instance = axios.create({ baseURL: baseUrl });
+    this.axiosInstance = Axios.create({ baseURL: baseUrl });
+  }
 
-    return instance;
+  async get(url: string, options: AxiosRequestConfig) {
+    const response = await this.axiosInstance.get(url, options);
+
+    return response;
   }
 }
