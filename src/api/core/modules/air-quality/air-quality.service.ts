@@ -2,10 +2,24 @@ import { AxiosRequestConfig } from 'axios';
 
 import { AirQualityQuery } from './dtos/air-quality-query.dto';
 import { AIR_QUALITY } from '../../../config/environment.config';
-import { baseRequestHander } from '../../../shared/base-request';
+import { BaseRequest } from '../../../shared/base-request';
+import { Scheduler } from '../../../shared/schedular';
+import { airQualityRepository } from './air-quality.repo';
+import { AirQualityCreateDto } from './dtos/air-quality-create.dto';
+import { Cache } from '../../../config/cache.config';
 
+interface AirQualityReponse {
+  status: string;
+  pollution: AirQualityCreateDto;
+}
 class AirQualityService {
   async getAirQualityByCoordinates(airQualityParamsDto: AirQualityQuery) {
+    const cachedData = Cache.getCache<AirQualityQuery>('getAirQualityByCoordinates');
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     const configuration: AxiosRequestConfig = {
       params: {
         key: AIR_QUALITY.KEY,
@@ -14,12 +28,12 @@ class AirQualityService {
       },
     };
 
-    const response = await baseRequestHander.get('/nearest_city', configuration);
-    return response.data;
-  }
-}
+    const response = await new BaseRequest().init(AIR_QUALITY.URL).get('/nearest_city', configuration);
+    Cache.setCache('getAirQualityByCoordinates', response.data.data.current.pollution);
 
-export const airQualityService = new AirQualityService();
+    return response.data.data.current.pollution;
+  }
+
   private async getParisAirQuality() {
     let parisAirQuality = Cache.getCache<AirQualityReponse>('getParisAirQuality');
 
