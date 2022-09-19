@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon -L",
-    "build": "tsc",
+    "production": "NODE_ENV=production node build/api/app.bootstrap.ts",
+    "build": "tsc && mkdir ./build/env && cp ./src/env/.env.template ./build/env/.env.production",
     "test": "jest"
   },
   "dependencies": {
