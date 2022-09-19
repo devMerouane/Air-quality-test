@@ -13,7 +13,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "sourceMap": true,
-    "outDir": "build",
+    "outDir": "build/api",
     "baseUrl": "./src/api",
     "paths": {},
     "emitDecoratorMetadata": true,
