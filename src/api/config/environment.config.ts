@@ -9,7 +9,7 @@ export class Environment {
 
   errors: string[] = [];
 
-  base = 'src';
+  base = process.env.NODE_ENV === ENVIRONMENT_ENUM.development ? 'src' : 'build';
 
   variables: Record<string, unknown>;
 
@@ -110,7 +110,7 @@ export class Environment {
       this.exit('The node version of the server is too low. Please consider at least v16.17.0.');
     }
 
-    const path = `${process.cwd()}/${this.base}/env/.env`;
+    const path = `${process.cwd()}/${this.base}/env/.env.${process.env.NODE_ENV}`;
 
     dotenv({ path });
 
@@ -150,7 +150,7 @@ export class Environment {
       MONGODB: {
         URL: this.variables.MONGODB_URL,
       },
-      CACHE_DURATION: this.variables.CACHE_DURATION
+      CACHE_DURATION: this.variables.CACHE_DURATION,
     };
 
     return this;
